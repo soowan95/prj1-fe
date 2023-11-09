@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export function BoardList() {
   const [boardList, setBoardList] = useState([]);
@@ -17,6 +18,8 @@ export function BoardList() {
   useEffect(() => {
     axios.get("/api/board/list").then(({ data }) => setBoardList(data));
   }, []);
+
+  const navigate = useNavigate();
 
   return (
     <Box>
@@ -36,7 +39,11 @@ export function BoardList() {
               <Spinner />
             ) : (
               boardList.map(({ id, title, writer, inserted }) => (
-                <Tr key={id}>
+                <Tr
+                  key={id}
+                  onClick={() => navigate("/board/" + id)}
+                  _hover={{ cursor: "pointer" }}
+                >
                   <Td>{id}</Td>
                   <Td>{title}</Td>
                   <Td>{writer}</Td>
