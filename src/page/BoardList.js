@@ -12,10 +12,10 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export function BoardList() {
-  const [boardList, setBoardList] = useState(null);
+  const [boardList, setBoardList] = useState([]);
 
   useEffect(() => {
-    // axios.get("/api/board/list").then(({ data }) => setBoardList(data));
+    axios.get("/api/board/list").then(({ data }) => setBoardList(data));
   }, []);
 
   return (
@@ -32,16 +32,18 @@ export function BoardList() {
             </Tr>
           </Thead>
           <Tbody>
-            {boardList || <Spinner />}
-            {boardList &&
-              boardList.map((board) => (
+            {boardList === null ? (
+              <Spinner />
+            ) : (
+              boardList.map(({ id, title, writer, inserted }) => (
                 <Tr>
-                  <Td>{board.id}</Td>
-                  <Td>{board.title}</Td>
-                  <Td>{board.writer}</Td>
-                  <Td>{board.inserted}</Td>
+                  <Td>{id}</Td>
+                  <Td>{title}</Td>
+                  <Td>{writer}</Td>
+                  <Td>{inserted}</Td>
                 </Tr>
-              ))}
+              ))
+            )}
           </Tbody>
         </Table>
       </Box>
