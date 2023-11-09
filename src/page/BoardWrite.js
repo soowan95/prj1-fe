@@ -5,6 +5,7 @@ import {
   FormLabel,
   Input,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useImmer } from "use-immer";
@@ -12,11 +13,23 @@ import { useImmer } from "use-immer";
 export function BoardWrite() {
   const [write, updateWrite] = useImmer({ title: "", content: "", writer: "" });
 
+  const toast = useToast();
+
   function handleSubmit() {
     axios
       .post("/api/board/add", { write })
-      .then(() => console.log("잘됨"))
-      .catch(() => console.log("안됨"))
+      .then(() => {
+        toast({
+          description: "새 글이 저장되었습니다.",
+          status: "success",
+        });
+      })
+      .catch(() => {
+        toast({
+          description: "저장 중에 문제가 발생하였습니다.",
+          status: "error",
+        });
+      })
       .finally(() => console.log("끝"));
   }
 
