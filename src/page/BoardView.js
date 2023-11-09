@@ -29,7 +29,8 @@ export function BoardView() {
     writer: "",
   });
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const deleteModal = useDisclosure();
+  const updateModal = useDisclosure();
 
   const { id } = useParams();
 
@@ -62,7 +63,7 @@ export function BoardView() {
           status: "error",
         }),
       )
-      .finally(() => onClose());
+      .finally(() => deleteModal.onClose());
   }
 
   function handleUpdateButton() {
@@ -89,7 +90,7 @@ export function BoardView() {
       <h1>글 보기</h1>
       <FormControl>
         <FormLabel>번호</FormLabel>
-        <Input value={board.id} />
+        <Input value={board.id} readOnly />
       </FormControl>
       <FormControl>
         <FormLabel>제목</FormLabel>
@@ -126,26 +127,41 @@ export function BoardView() {
       </FormControl>
       <FormControl>
         <FormLabel>작성일시</FormLabel>
-        <Input value={board.inserted} />
+        <Input value={board.inserted} readOnly />
       </FormControl>
-      <Button colorScheme="purple" onClick={handleUpdateButton}>
+      <Button colorScheme="purple" onClick={updateModal.onOpen}>
         수정
       </Button>
-      <Button colorScheme="red" onClick={onOpen}>
+      <Button colorScheme="red" onClick={deleteModal.onOpen}>
         삭제
       </Button>
 
       {/* 삭제 모달 */}
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={deleteModal.isOpen} onClose={deleteModal.onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>삭제 확인</ModalHeader>
           <ModalCloseButton />
           <ModalBody>삭제 하시겠습니까?</ModalBody>
           <ModalFooter>
-            <Button onClick={onClose}>닫기</Button>
+            <Button onClick={deleteModal.onClose}>닫기</Button>
             <Button onClick={handleDelete} colorScheme="red">
               삭제하기
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      <Modal isOpen={updateModal.isOpen} onClose={updateModal.onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>수정 확인</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>수정 하시겠습니까?</ModalBody>
+          <ModalFooter>
+            <Button onClick={updateModal.onClose}>닫기</Button>
+            <Button onClick={handleUpdateButton} colorScheme="purple">
+              수정하기
             </Button>
           </ModalFooter>
         </ModalContent>
