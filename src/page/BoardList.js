@@ -36,7 +36,7 @@ export function BoardList() {
               <Spinner />
             ) : (
               boardList.map(({ id, title, writer, inserted }) => (
-                <Tr>
+                <Tr key={id}>
                   <Td>{id}</Td>
                   <Td>{title}</Td>
                   <Td>{writer}</Td>
