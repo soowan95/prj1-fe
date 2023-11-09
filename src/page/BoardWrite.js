@@ -9,28 +9,43 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useImmer } from "use-immer";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function BoardWrite() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [write, updateWrite] = useImmer({ title: "", content: "", writer: "" });
+
+  const navigate = useNavigate();
 
   const toast = useToast();
 
   function handleSubmit() {
+    setIsSubmitting(true);
     axios
-      .post("/api/board/add", { write })
+      .post("/api/board/add", { ...write })
       .then(() => {
         toast({
           description: "새 글이 저장되었습니다.",
           status: "success",
         });
+        navigate("/");
       })
-      .catch(() => {
-        toast({
-          description: "저장 중에 문제가 발생하였습니다.",
-          status: "error",
-        });
+      .catch((e) => {
+        if (e.response.status === 400) {
+          toast({
+            description: "작성한 내용을 확인해주세요.",
+            status: "error",
+          });
+        } else {
+          toast({
+            description: "저장 중에 문제가 발생하였습니다.",
+            status: "error",
+          });
+        }
       })
-      .finally(() => console.log("끝"));
+      .finally(() => setIsSubmitting(false));
   }
 
   return (
@@ -70,7 +85,11 @@ export function BoardWrite() {
             }
           />
         </FormControl>
-        <Button onClick={handleSubmit} colorScheme="blue">
+        <Button
+          isDisabled={isSubmitting}
+          onClick={handleSubmit}
+          colorScheme="blue"
+        >
           저장
         </Button>
       </Box>
