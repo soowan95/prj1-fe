@@ -9,7 +9,7 @@ export function BoardView() {
   const { id } = useParams();
 
   useEffect(() => {
-    axios.get("/api/board/id?id=" + id).then(({ data }) => setBoard(data));
+    axios.get("/api/board/id/" + id).then(({ data }) => setBoard(data));
   }, []);
 
   if (board === null) {

@@ -21,6 +21,8 @@ export function BoardList() {
 
   const navigate = useNavigate();
 
+  if (boardList === null) return <Spinner />;
+
   return (
     <Box>
       <h1>게시물 목록</h1>
@@ -35,22 +37,18 @@ export function BoardList() {
             </Tr>
           </Thead>
           <Tbody>
-            {boardList === null ? (
-              <Spinner />
-            ) : (
-              boardList.map(({ id, title, writer, inserted }) => (
-                <Tr
-                  key={id}
-                  onClick={() => navigate("/board/" + id)}
-                  _hover={{ cursor: "pointer" }}
-                >
-                  <Td>{id}</Td>
-                  <Td>{title}</Td>
-                  <Td>{writer}</Td>
-                  <Td>{inserted}</Td>
-                </Tr>
-              ))
-            )}
+            {boardList.map(({ id, title, writer, inserted }) => (
+              <Tr
+                key={id}
+                onClick={() => navigate("/board/" + id)}
+                _hover={{ cursor: "pointer" }}
+              >
+                <Td>{id}</Td>
+                <Td>{title}</Td>
+                <Td>{writer}</Td>
+                <Td>{inserted}</Td>
+              </Tr>
+            ))}
           </Tbody>
         </Table>
       </Box>
