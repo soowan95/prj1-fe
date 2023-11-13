@@ -22,7 +22,8 @@ import { useImmer } from "use-immer";
 
 export function MemberView() {
   const [member, setMember] = useState(null);
-  const [updateData, updateUpdateData] = useImmer({ password: "", email: "" });
+  const [passwordCheck, setPasswordCheck] = useState("");
+  const [updateData, updateUpdateData] = useImmer({});
 
   const [param] = useSearchParams();
 
@@ -34,9 +35,10 @@ export function MemberView() {
   const updateModal = useDisclosure();
 
   useEffect(() => {
-    axios
-      .get("/api/member?" + param.toString())
-      .then(({ data }) => setMember(data));
+    axios.get("/api/member?" + param.toString()).then(({ data }) => {
+      setMember(data);
+      updateUpdateData(data);
+    });
   }, []);
 
   if (member === null) {
@@ -79,7 +81,7 @@ export function MemberView() {
           description: "수정이 완료됐습니다.",
           status: "success",
         });
-        navigate("/");
+        navigate("/member/list");
       })
       .catch((e) => {
         if (e.response.status === 400) {
@@ -97,6 +99,12 @@ export function MemberView() {
       .finally(() => updateModal.onClose());
   }
 
+  let passwordChecked = false;
+
+  if (passwordCheck === updateData.password) passwordChecked = true;
+
+  if (updateData.password.length === 0) passwordChecked = true;
+
   return (
     <Box>
       <h1>{member.id} 님 정보</h1>
@@ -112,6 +120,16 @@ export function MemberView() {
           }}
         />
       </FormControl>
+      {updateData.password.length > 0 && (
+        <FormControl>
+          <FormLabel>password 확인</FormLabel>
+          <Input
+            type="text"
+            value={passwordCheck}
+            onChange={(e) => setPasswordCheck(e.target.value)}
+          />
+        </FormControl>
+      )}
       <FormControl>
         <FormLabel>email</FormLabel>
         <Input
@@ -150,10 +168,17 @@ export function MemberView() {
         <ModalContent>
           <ModalHeader>수정 확인</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>수정 하시겠습니까?</ModalBody>
+          <ModalBody>
+            {(!passwordChecked && "비밀번호를 확인해주세요.") ||
+              "수정 하시겠습니까?"}
+          </ModalBody>
           <ModalFooter>
             <Button onClick={updateModal.onClose}>닫기</Button>
-            <Button onClick={handleUpdateButton} colorScheme="purple">
+            <Button
+              isDisabled={!passwordChecked && "disalbed"}
+              onClick={handleUpdateButton}
+              colorScheme="purple"
+            >
               수정하기
             </Button>
           </ModalFooter>
