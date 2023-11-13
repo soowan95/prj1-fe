@@ -18,9 +18,11 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
+import { useImmer } from "use-immer";
 
 export function MemberView() {
   const [member, setMember] = useState(null);
+  const [updateData, updateUpdateData] = useImmer({ password: "", email: "" });
 
   const [param] = useSearchParams();
 
@@ -29,6 +31,7 @@ export function MemberView() {
   const toast = useToast();
 
   const deleteModal = useDisclosure();
+  const updateModal = useDisclosure();
 
   useEffect(() => {
     axios
@@ -68,18 +71,61 @@ export function MemberView() {
       .finally(() => deleteModal.onClose());
   }
 
+  function handleUpdateButton() {
+    axios
+      .put("api/member?" + param.toString(), { ...updateData })
+      .then(() => {
+        toast({
+          description: "수정이 완료됐습니다.",
+          status: "success",
+        });
+        navigate("/");
+      })
+      .catch((e) => {
+        if (e.response.status === 400) {
+          toast({
+            description: "중복된 email이 있습니다.",
+            status: "error",
+          });
+        } else {
+          toast({
+            description: "수정 중 문제가 발생하였습니다.",
+            status: "error",
+          });
+        }
+      })
+      .finally(() => updateModal.onClose());
+  }
+
   return (
     <Box>
       <h1>{member.id} 님 정보</h1>
       <FormControl>
         <FormLabel>password</FormLabel>
-        <Input type="text" value={member.password} readOnly />
+        <Input
+          type="text"
+          defaultValue={member.password}
+          onChange={(e) => {
+            updateUpdateData((draft) => {
+              draft.password = e.target.value;
+            });
+          }}
+        />
       </FormControl>
       <FormControl>
         <FormLabel>email</FormLabel>
-        <Input value={member.email} readOnly />
+        <Input
+          defaultValue={member.email}
+          onChange={(e) => {
+            updateUpdateData((draft) => {
+              draft.email = e.target.value;
+            });
+          }}
+        />
       </FormControl>
-      <Button colorScheme="purple">수정</Button>
+      <Button onClick={updateModal.onOpen} colorScheme="purple">
+        수정
+      </Button>
       <Button onClick={deleteModal.onOpen} colorScheme="red">
         탈퇴
       </Button>
@@ -94,6 +140,21 @@ export function MemberView() {
             <Button onClick={deleteModal.onClose}>닫기</Button>
             <Button onClick={handleDelete} colorScheme="red">
               탈퇴
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      <Modal isOpen={updateModal.isOpen} onClose={updateModal.onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>수정 확인</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>수정 하시겠습니까?</ModalBody>
+          <ModalFooter>
+            <Button onClick={updateModal.onClose}>닫기</Button>
+            <Button onClick={handleUpdateButton} colorScheme="purple">
+              수정하기
             </Button>
           </ModalFooter>
         </ModalContent>
