@@ -39,6 +39,7 @@ export function MemberList() {
           <Tr>
             <Th>id</Th>
             <Th>pw</Th>
+            <Th>nickName</Th>
             <Th>email</Th>
             <Th>가입일시</Th>
           </Tr>
@@ -52,6 +53,7 @@ export function MemberList() {
             >
               <Td>{member.id}</Td>
               <Td>{member.password}</Td>
+              <Td>{member.nickName}</Td>
               <Td>{member.email}</Td>
               <Td>{member.inserted}</Td>
             </Tr>

@@ -94,6 +94,11 @@ export function MemberView() {
             description: "중복된 email이 있습니다.",
             status: "error",
           });
+        } else if (e.response.status === 404) {
+          toast({
+            description: "중복된 nickName이 있습니다.",
+            status: "error",
+          });
         } else {
           toast({
             description: "수정 중 문제가 발생하였습니다.",
@@ -135,6 +140,17 @@ export function MemberView() {
           />
         </FormControl>
       )}
+      <FormControl>
+        <FormLabel>nickName</FormLabel>
+        <Input
+          defaultValue={member.nickName}
+          onChange={(e) => {
+            updateUpdateData((draft) => {
+              draft.nickName = e.target.value;
+            });
+          }}
+        />
+      </FormControl>
       <FormControl>
         <FormLabel>email</FormLabel>
         <Input
