@@ -1,13 +1,17 @@
+import React from "react";
 import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
   RouterProvider,
 } from "react-router-dom";
-import { BoardWrite } from "./page/BoardWrite";
-import { BoardList } from "./page/BoardList";
+import { BoardWrite } from "./page/board/BoardWrite";
+import { BoardList } from "./page/board/BoardList";
 import { HomeLayout } from "./layout/HomeLayout";
-import { BoardView } from "./page/BoardView";
+import { BoardView } from "./page/board/BoardView";
+import { MemberSignup } from "./page/member/MemberSignup";
+import { MemberList } from "./page/member/MemberList";
+import { MemberView } from "./page/member/MemberView";
 
 const routes = createBrowserRouter(
   createRoutesFromElements(
@@ -15,11 +19,14 @@ const routes = createBrowserRouter(
       <Route index element={<BoardList />} />
       <Route path="write" element={<BoardWrite />} />
       <Route path="board/:id" element={<BoardView />} />
+      <Route path="signup" element={<MemberSignup />} />
+      <Route path="member/list" element={<MemberList />} />
+      <Route path="member" element={<MemberView />} />
     </Route>,
   ),
 );
 
-function App() {
+function App(props) {
   return <RouterProvider router={routes} />;
 }
 
