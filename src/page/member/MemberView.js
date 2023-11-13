@@ -84,7 +84,12 @@ export function MemberView() {
         navigate("/member/list");
       })
       .catch((e) => {
-        if (e.response.status === 400) {
+        if (e.response.status === 401 || e.response.status === 403) {
+          toast({
+            description: "수정 권한이 없습니다.",
+            status: "error",
+          });
+        } else if (e.response.status === 400) {
           toast({
             description: "중복된 email이 있습니다.",
             status: "error",
