@@ -9,7 +9,7 @@ import {
 import { useImmer } from "use-immer";
 import axios from "axios";
 import { useContext } from "react";
-import { LoginContext } from "../../App";
+import { LoginContext } from "../../component/LoginProvider";
 import { useNavigate } from "react-router-dom";
 
 export function MemberLongin() {

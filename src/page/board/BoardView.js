@@ -20,7 +20,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useImmer } from "use-immer";
-import { LoginContext } from "../../App";
+import { LoginContext } from "../../component/LoginProvider";
 
 export function BoardView() {
   const [board, setBoard] = useState(null);
@@ -39,7 +39,7 @@ export function BoardView() {
 
   const toast = useToast();
 
-  const { hasAccess } = useContext(LoginContext);
+  const { hasAccess, isAdmin } = useContext(LoginContext);
 
   useEffect(() => {
     axios.get("/api/board/id/" + id).then(({ data }) => setBoard(data));
@@ -125,7 +125,7 @@ export function BoardView() {
         <FormLabel>작성일시</FormLabel>
         <Input value={board.inserted} readOnly />
       </FormControl>
-      {hasAccess(board.writer) && (
+      {(hasAccess(board.writer) || isAdmin()) && (
         <Box>
           <Button colorScheme="purple" onClick={updateModal.onOpen}>
             수정

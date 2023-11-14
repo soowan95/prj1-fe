@@ -14,6 +14,7 @@ import { MemberList } from "./page/member/MemberList";
 import { MemberView } from "./page/member/MemberView";
 import { MemberLongin } from "./page/member/MemberLongin";
 import axios from "axios";
+import LoginProvider from "./component/LoginProvider";
 
 const routes = createBrowserRouter(
   createRoutesFromElements(
@@ -29,40 +30,11 @@ const routes = createBrowserRouter(
   ),
 );
 
-export const LoginContext = createContext(null);
-
 function App(props) {
-  const [login, setLogin] = useState("");
-
-  function fetchLogin() {
-    axios.get("/api/member/login").then(({ data }) => setLogin(data));
-  }
-
-  function isAuthenticated() {
-    return login !== "";
-  }
-
-  function isAdmin() {
-    if (login === "") return false;
-    return login.auth.some((e) => e.name === "admin");
-  }
-
-  function hasAccess(userId) {
-    return login.id === userId;
-  }
-
-  useEffect(() => {
-    fetchLogin();
-  }, []);
-
-  console.log(login);
-
   return (
-    <LoginContext.Provider
-      value={{ login, fetchLogin, isAuthenticated, hasAccess, isAdmin }}
-    >
+    <LoginProvider>
       <RouterProvider router={routes} />
-    </LoginContext.Provider>
+    </LoginProvider>
   );
 }
 
