@@ -35,10 +35,19 @@ export function MemberView() {
   const updateModal = useDisclosure();
 
   useEffect(() => {
-    axios.get("/api/member?" + param.toString()).then(({ data }) => {
-      setMember(data);
-      updateUpdateData(data);
-    });
+    axios
+      .get("/api/member?" + param.toString())
+      .then(({ data }) => {
+        setMember(data);
+        updateUpdateData(data);
+      })
+      .catch((e) => {
+        toast({
+          description: "권한이 없습니다.",
+          status: "warning",
+        });
+        navigate("/login");
+      });
   }, []);
 
   if (member === null) {
