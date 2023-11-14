@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 export function BoardWrite() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [write, updateWrite] = useImmer({ title: "", content: "", writer: "" });
+  const [write, updateWrite] = useImmer({ title: "", content: "" });
 
   const navigate = useNavigate();
 
@@ -74,17 +74,7 @@ export function BoardWrite() {
             }
           ></Textarea>
         </FormControl>
-        <FormControl>
-          <FormLabel>작성자</FormLabel>
-          <Input
-            value={write.writer}
-            onChange={(e) =>
-              updateWrite((draft) => {
-                draft.writer = e.target.value;
-              })
-            }
-          />
-        </FormControl>
+
         <Button
           isDisabled={isSubmitting}
           onClick={handleSubmit}
