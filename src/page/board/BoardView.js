@@ -115,17 +115,6 @@ export function BoardView() {
         />
       </FormControl>
       <FormControl>
-        <FormLabel>작성자</FormLabel>
-        <Input
-          defaultValue={board.writer}
-          onChange={(e) =>
-            updateUpdateData((draft) => {
-              draft.writer = e.target.value;
-            })
-          }
-        />
-      </FormControl>
-      <FormControl>
         <FormLabel>작성일시</FormLabel>
         <Input value={board.inserted} readOnly />
       </FormControl>
