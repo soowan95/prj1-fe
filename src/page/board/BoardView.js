@@ -125,7 +125,6 @@ export function BoardView() {
         <FormLabel>작성일시</FormLabel>
         <Input value={board.inserted} readOnly />
       </FormControl>
-
       {hasAccess(board.writer) && (
         <Box>
           <Button colorScheme="purple" onClick={updateModal.onOpen}>
@@ -152,7 +151,6 @@ export function BoardView() {
           </ModalFooter>
         </ModalContent>
       </Modal>
-
       <Modal isOpen={updateModal.isOpen} onClose={updateModal.onClose}>
         <ModalOverlay />
         <ModalContent>
