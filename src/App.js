@@ -42,6 +42,11 @@ function App(props) {
     return login !== "";
   }
 
+  function isAdmin() {
+    if (login === "") return false;
+    return login.auth.some((e) => e.name === "admin");
+  }
+
   function hasAccess(userId) {
     return login.id === userId;
   }
@@ -54,7 +59,7 @@ function App(props) {
 
   return (
     <LoginContext.Provider
-      value={{ login, fetchLogin, isAuthenticated, hasAccess }}
+      value={{ login, fetchLogin, isAuthenticated, hasAccess, isAdmin }}
     >
       <RouterProvider router={routes} />
     </LoginContext.Provider>
