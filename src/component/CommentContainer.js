@@ -1,6 +1,8 @@
 import { Box, Button, Input, Textarea } from "@chakra-ui/react";
 import axios from "axios";
 import { useImmer } from "use-immer";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 function CommentForm({ boardId }) {
   const [comment, updateComment] = useImmer({ boardId, comment: "" });
@@ -24,7 +26,17 @@ function CommentForm({ boardId }) {
   );
 }
 
-function CommentList() {
+function CommentList({ boardId }) {
+  const [commentList, setCommentList] = useState(null);
+
+  const { id } = useParams();
+
+  useEffect(() => {
+    axios
+      .get("/api/comment/list/" + id)
+      .then(({ data }) => setCommentList(data));
+  }, []);
+
   return <Box>댓글 리스트</Box>;
 }
 
@@ -32,7 +44,7 @@ export function CommentContainer({ boardId }) {
   return (
     <Box>
       <CommentForm boardId={boardId} />
-      <CommentList />
+      <CommentList boardId={boardId} />
     </Box>
   );
 }
