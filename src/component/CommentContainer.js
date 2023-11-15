@@ -196,6 +196,18 @@ export function CommentContainer({ boardId }) {
     setIsSubmitting(true);
     axios
       .post("/api/comment/add", { ...comment })
+      .then(() => {
+        toast({
+          description: "댓글이 등록되었습니다.",
+          status: "success",
+        });
+      })
+      .catch((e) => {
+        toast({
+          description: "댓글 등록 중 문제가 생겼습니다.",
+          status: "error",
+        });
+      })
       .finally(() => setIsSubmitting(false));
   }
 
@@ -206,6 +218,12 @@ export function CommentContainer({ boardId }) {
       .then(() => {
         toast({
           description: "삭제 되었습니다.",
+          status: "success",
+        });
+      })
+      .catch((e) => {
+        toast({
+          description: "삭제 중 문제가 발생했습니다.",
           status: "error",
         });
       })
