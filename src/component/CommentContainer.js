@@ -22,7 +22,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useImmer } from "use-immer";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { LoginContext } from "./LoginProvider";
 import { DeleteIcon } from "@chakra-ui/icons";
@@ -59,7 +59,7 @@ function CommentForm({ boardId, isSubmitting, onSubmit }) {
 }
 
 function CommentList({ commentList, onDelete, onUpdate }) {
-  const [id, setId] = useState(0);
+  const id = useRef(0);
 
   const { isAdmin, hasAccess } = useContext(LoginContext);
 
@@ -67,11 +67,11 @@ function CommentList({ commentList, onDelete, onUpdate }) {
   const deleteModal = useDisclosure();
 
   function handleDelete() {
-    onDelete(id);
+    onDelete(id.current);
   }
 
   function handleUpdate(comment) {
-    onUpdate(comment, id);
+    onUpdate(comment, id.current);
   }
 
   return (
@@ -102,7 +102,7 @@ function CommentList({ commentList, onDelete, onUpdate }) {
                         size={"sm"}
                         fontSize={"15px"}
                         onClick={() => {
-                          setId(comment.id);
+                          id.current = comment.id;
                           updateModal.onOpen();
                         }}
                         _hover={{ bg: "purple.300", color: "white" }}
@@ -113,7 +113,7 @@ function CommentList({ commentList, onDelete, onUpdate }) {
                         size={"sm"}
                         fontSize={"15px"}
                         onClick={() => {
-                          setId(comment.id);
+                          id.current = comment.id;
                           deleteModal.onOpen();
                         }}
                         _hover={{
