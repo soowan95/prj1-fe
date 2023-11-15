@@ -1,4 +1,16 @@
-import { Box, Button, Input, Textarea } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Flex,
+  Heading,
+  Stack,
+  StackDivider,
+  Text,
+  Textarea,
+} from "@chakra-ui/react";
 import axios from "axios";
 import { useImmer } from "use-immer";
 import { useEffect, useState } from "react";
@@ -15,11 +27,11 @@ function CommentForm({ boardId }) {
     <Box>
       <Textarea
         value={comment.comment}
-        onChange={(e) =>
+        onChange={(e) => {
           updateComment((draft) => {
             draft.comment = e.target.value;
-          })
-        }
+          });
+        }}
       />
       <Button onClick={handleSubmit}>쓰기</Button>
     </Box>
@@ -37,7 +49,30 @@ function CommentList({ boardId }) {
       .then(({ data }) => setCommentList(data));
   }, []);
 
-  return <Box>댓글 리스트</Box>;
+  return (
+    <Card>
+      <CardHeader>
+        <Heading size={"md"}>댓글 리스트</Heading>
+      </CardHeader>
+      <CardBody>
+        <Stack divider={<StackDivider />} spacing={"4"}>
+          {/* todo: 댓글 작성 후 re render */}
+          {commentList !== null &&
+            commentList.map((comment) => (
+              <Box>
+                <Flex justifyContent={"space-between"}>
+                  <Heading size={"xs"}>{comment.memberId}</Heading>
+                  <Text fontSize={"xs"}>{comment.inserted}</Text>
+                </Flex>
+                <Text sx={{ whiteSpace: "pre-wrap" }} pt={"2"} fontSize={"sm"}>
+                  {comment.comment}
+                </Text>
+              </Box>
+            ))}
+        </Stack>
+      </CardBody>
+    </Card>
+  );
 }
 
 export function CommentContainer({ boardId }) {
