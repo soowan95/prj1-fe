@@ -22,7 +22,6 @@ export function MemberLongin() {
   const toast = useToast();
 
   function handleLogin() {
-    // todo: 로그인 후 성공, 실패, 완료 코드 추가
     axios
       .post("/api/member/login", { ...userInfo })
       .then(() => {

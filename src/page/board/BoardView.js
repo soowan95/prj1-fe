@@ -21,6 +21,7 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useImmer } from "use-immer";
 import { LoginContext } from "../../component/LoginProvider";
+import { CommentContainer } from "../../component/CommentContainer";
 
 export function BoardView() {
   const [board, setBoard] = useState(null);
@@ -165,6 +166,7 @@ export function BoardView() {
           </ModalFooter>
         </ModalContent>
       </Modal>
+      <CommentContainer boardId={board.id} />
     </Box>
   );
 }
