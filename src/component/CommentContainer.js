@@ -58,7 +58,7 @@ function CommentForm({ boardId, isSubmitting, onSubmit }) {
   );
 }
 
-function CommentList({ commentList, onDelete, onUpdate }) {
+function CommentList({ commentCount, commentList, onDelete, onUpdate }) {
   const id = useRef(0);
 
   const { isAdmin, hasAccess } = useContext(LoginContext);
@@ -77,7 +77,7 @@ function CommentList({ commentList, onDelete, onUpdate }) {
   return (
     <Card>
       <CardHeader>
-        <Heading size={"md"}>댓글 리스트</Heading>
+        <Heading size={"md"}>댓글 리스트 ({commentCount} 개)</Heading>
       </CardHeader>
       <CardBody>
         <Stack divider={<StackDivider />} spacing={"4"}>
@@ -85,7 +85,7 @@ function CommentList({ commentList, onDelete, onUpdate }) {
             commentList.map((comment) => (
               <Box key={comment.id}>
                 <Flex mb={"4"} justifyContent={"space-between"}>
-                  <Heading size={"xs"}>{comment.memberId}</Heading>
+                  <Heading size={"xs"}>{comment.nickName}</Heading>
                   <Text fontSize={"xs"}>{comment.inserted}</Text>
                 </Flex>
                 <Flex position={"relative"}>
@@ -189,8 +189,12 @@ export function CommentContainer({ boardId }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [commentList, setCommentList] = useState(null);
+  const [commentCount, setCommentCount] = useState(0);
 
   const toast = useToast();
+
+  const { id } = useParams();
 
   function handleSubmit(comment) {
     setIsSubmitting(true);
@@ -243,15 +247,14 @@ export function CommentContainer({ boardId }) {
       .finally(() => setIsUpdating(false));
   }
 
-  const [commentList, setCommentList] = useState(null);
-
-  const { id } = useParams();
-
   useEffect(() => {
     if (!isSubmitting && !isDeleting && !isUpdating) {
       axios
         .get("/api/comment/list/" + id)
         .then(({ data }) => setCommentList(data));
+      axios
+        .get("/api/comment/count/" + id)
+        .then(({ data }) => setCommentCount(data));
     }
   }, [isSubmitting, isDeleting, isUpdating]);
 
@@ -263,6 +266,7 @@ export function CommentContainer({ boardId }) {
         onSubmit={handleSubmit}
       />
       <CommentList
+        commentCount={commentCount}
         commentList={commentList}
         onDelete={handleDelete}
         onUpdate={handleUpdate}
