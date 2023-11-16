@@ -13,6 +13,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ChatIcon } from "@chakra-ui/icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart } from "@fortawesome/free-regular-svg-icons";
 
 export function BoardList() {
   const [boardList, setBoardList] = useState([]);
@@ -40,7 +42,7 @@ export function BoardList() {
           </Thead>
           <Tbody>
             {boardList.map(
-              ({ id, title, nickName, inserted, commentCount }) => (
+              ({ id, title, nickName, inserted, commentCount, likeCount }) => (
                 <Tr
                   key={id}
                   onClick={() => navigate("/board/" + id)}
@@ -51,8 +53,14 @@ export function BoardList() {
                     {title}{" "}
                     {commentCount > 0 && (
                       <Badge>
-                        <ChatIcon />
+                        <ChatIcon color={"skyblue"} />
                         {commentCount}
+                      </Badge>
+                    )}
+                    {likeCount > 0 && (
+                      <Badge>
+                        <FontAwesomeIcon icon={faHeart} color="red" />
+                        {likeCount}
                       </Badge>
                     )}
                   </Td>

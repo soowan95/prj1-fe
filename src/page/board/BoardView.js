@@ -1,8 +1,10 @@
 import {
   Box,
   Button,
+  Flex,
   FormControl,
   FormLabel,
+  Heading,
   Input,
   Modal,
   ModalBody,
@@ -22,9 +24,13 @@ import axios from "axios";
 import { useImmer } from "use-immer";
 import { LoginContext } from "../../component/LoginProvider";
 import { CommentContainer } from "../../component/CommentContainer";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart as likeHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart as normalHeart } from "@fortawesome/free-regular-svg-icons";
 
 export function BoardView() {
   const [board, setBoard] = useState(null);
+  const [isChange, setIsChange] = useState(false);
   const [updateData, updateUpdateData] = useImmer({
     title: "",
     content: "",
@@ -44,7 +50,7 @@ export function BoardView() {
 
   useEffect(() => {
     axios.get("/api/board/id/" + id).then(({ data }) => setBoard(data));
-  }, []);
+  }, [isChange]);
 
   if (board === null) {
     return <Spinner />;
@@ -89,13 +95,45 @@ export function BoardView() {
       );
   }
 
+  function handleLike() {
+    setIsChange(true);
+    axios
+      .post("/api/like", { boardId: board.id })
+      .then(() => {
+        toast({
+          description: "좋아요!!",
+          status: "info",
+        });
+      })
+      .catch((e) => {
+        if (e.response.status === 401)
+          toast({
+            description: "로그인 해주세요.",
+            status: "error",
+          });
+        else
+          toast({
+            description: "좋아요 취소",
+            status: "warning",
+          });
+      })
+      .finally(() => {
+        setIsChange(false);
+      });
+  }
+
   return (
     <Box>
-      <h1>글 보기</h1>
-      <FormControl>
-        <FormLabel>번호</FormLabel>
-        <Input value={board.id} readOnly />
-      </FormControl>
+      <Flex justifyContent={"space-between"}>
+        <Heading size={"xl"}>{board.id} 번 글 보기</Heading>
+        <Button variant={"ghost"} size={"xl"} onClick={handleLike}>
+          <FontAwesomeIcon
+            icon={board.isLike ? likeHeart : normalHeart}
+            size="xl"
+            color={board.isLike ? "red" : "black"}
+          />
+        </Button>
+      </Flex>
       <FormControl>
         <FormLabel>제목</FormLabel>
         <Input
