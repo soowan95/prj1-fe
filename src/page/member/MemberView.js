@@ -61,16 +61,13 @@ export function MemberView() {
     axios
       .delete("/api/member?" + param.toString())
       .then(() => {
-        axios
-          .post("/api/member/logout")
-          .then(() => {
-            toast({
-              description: "탈퇴 완료했습니다.",
-              status: "success",
-            });
-            navigate("/");
-          })
-          .finally(() => fetchLogin());
+        axios.post("/api/member/logout").then(() => {
+          toast({
+            description: "탈퇴 완료했습니다.",
+            status: "success",
+          });
+          navigate("/");
+        });
       })
       .catch((e) => {
         if (e.response.status === 401 || e.response.status === 403) {
