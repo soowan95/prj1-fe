@@ -1,5 +1,5 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -19,6 +19,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useImmer } from "use-immer";
+import { LoginContext } from "../../component/LoginProvider";
 
 export function MemberView() {
   const [member, setMember] = useState(null);
@@ -33,6 +34,8 @@ export function MemberView() {
 
   const deleteModal = useDisclosure();
   const updateModal = useDisclosure();
+
+  const { fetchLogin } = useContext(LoginContext);
 
   useEffect(() => {
     axios
@@ -58,13 +61,16 @@ export function MemberView() {
     axios
       .delete("/api/member?" + param.toString())
       .then(() => {
-        toast({
-          description: "탈퇴 완료했습니다.",
-          status: "success",
-        });
-        navigate("/");
-
-        // todo: 로그아웃기능 추가하기
+        axios
+          .post("/api/member/logout")
+          .then(() => {
+            toast({
+              description: "탈퇴 완료했습니다.",
+              status: "success",
+            });
+            navigate("/");
+          })
+          .finally(() => fetchLogin());
       })
       .catch((e) => {
         if (e.response.status === 401 || e.response.status === 403) {
