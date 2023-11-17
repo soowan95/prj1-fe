@@ -86,7 +86,7 @@ function CommentList({ commentCount, commentList, onDelete, onUpdate }) {
               <Box key={comment.id}>
                 <Flex mb={"4"} justifyContent={"space-between"}>
                   <Heading size={"xs"}>{comment.nickName}</Heading>
-                  <Text fontSize={"xs"}>{comment.inserted}</Text>
+                  <Text fontSize={"xs"}>{comment.ago}</Text>
                 </Flex>
                 <Flex position={"relative"}>
                   <Text

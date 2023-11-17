@@ -42,7 +42,7 @@ export function BoardList() {
           </Thead>
           <Tbody>
             {boardList.map(
-              ({ id, title, nickName, inserted, commentCount, likeCount }) => (
+              ({ id, title, nickName, ago, commentCount, likeCount }) => (
                 <Tr
                   key={id}
                   onClick={() => navigate("/board/" + id)}
@@ -65,7 +65,7 @@ export function BoardList() {
                     )}
                   </Td>
                   <Td>{nickName}</Td>
-                  <Td>{inserted}</Td>
+                  <Td>{ago}</Td>
                 </Tr>
               ),
             )}
