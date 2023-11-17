@@ -1,6 +1,7 @@
 import {
   Badge,
   Box,
+  Button,
   Spinner,
   Table,
   Tbody,
@@ -18,17 +19,23 @@ import { faHeart } from "@fortawesome/free-regular-svg-icons";
 
 export function BoardList() {
   const [boardList, setBoardList] = useState([]);
+  const [page, setPage] = useState(1);
   const [params] = useSearchParams();
 
   useEffect(() => {
     axios
       .get("/api/board/list?" + params)
       .then(({ data }) => setBoardList(data));
-  }, []);
+  }, [page]);
 
   const navigate = useNavigate();
 
   if (boardList === null) return <Spinner />;
+
+  function handlePaging(e) {
+    setPage(e);
+    navigate("/?p=" + e);
+  }
 
   return (
     <Box>
@@ -74,6 +81,38 @@ export function BoardList() {
             )}
           </Tbody>
         </Table>
+      </Box>
+      <Box>
+        <Button value="1" onClick={(e) => handlePaging(e.target.value)}>
+          1
+        </Button>
+        <Button value="2" onClick={(e) => handlePaging(e.target.value)}>
+          2
+        </Button>
+        <Button value="3" onClick={(e) => handlePaging(e.target.value)}>
+          3
+        </Button>
+        <Button value="4" onClick={(e) => handlePaging(e.target.value)}>
+          4
+        </Button>
+        <Button value="5" onClick={(e) => handlePaging(e.target.value)}>
+          5
+        </Button>
+        <Button value="6" onClick={(e) => handlePaging(e.target.value)}>
+          6
+        </Button>
+        <Button value="7" onClick={(e) => handlePaging(e.target.value)}>
+          7
+        </Button>
+        <Button value="8" onClick={(e) => handlePaging(e.target.value)}>
+          8
+        </Button>
+        <Button value="9" onClick={(e) => handlePaging(e.target.value)}>
+          9
+        </Button>
+        <Button value="10" onClick={(e) => handlePaging(e.target.value)}>
+          10
+        </Button>
       </Box>
     </Box>
   );
