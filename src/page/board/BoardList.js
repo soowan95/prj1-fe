@@ -10,7 +10,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ChatIcon } from "@chakra-ui/icons";
@@ -19,21 +19,21 @@ import { faHeart } from "@fortawesome/free-regular-svg-icons";
 
 export function BoardList() {
   const [boardList, setBoardList] = useState([]);
-  const [page, setPage] = useState(1);
+  const page = useRef(1);
   const [params] = useSearchParams();
 
   useEffect(() => {
     axios
       .get("/api/board/list?" + params)
       .then(({ data }) => setBoardList(data));
-  }, [page]);
+  }, [page.current]);
 
   const navigate = useNavigate();
 
   if (boardList === null) return <Spinner />;
 
   function handlePaging(e) {
-    setPage(e);
+    page.current = e;
     navigate("/?p=" + e);
   }
 
