@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   FormControl,
+  FormHelperText,
   FormLabel,
   Input,
   Textarea,
@@ -15,7 +16,11 @@ import { useNavigate } from "react-router-dom";
 export function BoardWrite() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [write, updateWrite] = useImmer({ title: "", content: "", file: null });
+  const [write, updateWrite] = useImmer({
+    title: "",
+    content: "",
+    files: null,
+  });
 
   const navigate = useNavigate();
 
@@ -79,12 +84,16 @@ export function BoardWrite() {
           <Input
             type="file"
             accept="image/*"
+            multiple
             onChange={(e) =>
               updateWrite((draft) => {
-                draft.file = e.target.files[0];
+                draft.files = e.target.files;
               })
             }
           />
+          <FormHelperText>
+            한 개 파일은 1MB 이내, 총 용량은 10MB 이내로 첨부하세요.
+          </FormHelperText>
         </FormControl>
 
         <Button
