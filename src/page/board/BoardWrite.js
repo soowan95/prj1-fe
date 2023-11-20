@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 export function BoardWrite() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [write, updateWrite] = useImmer({ title: "", content: "" });
+  const [write, updateWrite] = useImmer({ title: "", content: "", file: null });
 
   const navigate = useNavigate();
 
@@ -24,7 +24,7 @@ export function BoardWrite() {
   function handleSubmit() {
     setIsSubmitting(true);
     axios
-      .post("/api/board/add", { ...write })
+      .postForm("/api/board/add", { ...write })
       .then(() => {
         toast({
           description: "새 글이 저장되었습니다.",
@@ -73,6 +73,18 @@ export function BoardWrite() {
               })
             }
           ></Textarea>
+        </FormControl>
+        <FormControl>
+          <FormLabel>이미지</FormLabel>
+          <Input
+            type="file"
+            accept="image/*"
+            onChange={(e) =>
+              updateWrite((draft) => {
+                draft.file = e.target.files[0];
+              })
+            }
+          />
         </FormControl>
 
         <Button
