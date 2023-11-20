@@ -5,6 +5,7 @@ import {
   FormControl,
   FormLabel,
   Heading,
+  Image,
   Input,
   Modal,
   ModalBody,
@@ -156,6 +157,11 @@ export function BoardView() {
           }
         />
       </FormControl>
+      {board.files.map(({ url, id, name }) => (
+        <Box key={id} my={"5px"} border={"3px solid black"}>
+          <Image width={"100%"} src={url} alt={name} />
+        </Box>
+      ))}
       <FormControl>
         <FormLabel>작성자</FormLabel>
         <Input value={board.nickName} readOnly />
