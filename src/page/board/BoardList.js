@@ -17,7 +17,11 @@ import { ChatIcon } from "@chakra-ui/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import { SearchComponent } from "../../component/SearchComponent";
-import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleLeft,
+  faAngleRight,
+  faImage,
+} from "@fortawesome/free-solid-svg-icons";
 
 function PageButton({ variant, pageNumber, children }) {
   const [params] = useSearchParams();
@@ -106,7 +110,15 @@ export function BoardList() {
           </Thead>
           <Tbody>
             {boardList.map(
-              ({ id, title, nickName, ago, commentCount, likeCount }) => (
+              ({
+                id,
+                title,
+                nickName,
+                ago,
+                commentCount,
+                likeCount,
+                imageCount,
+              }) => (
                 <Tr
                   key={id}
                   onClick={() => navigate("/board/" + id)}
@@ -125,6 +137,12 @@ export function BoardList() {
                       <Badge>
                         <FontAwesomeIcon icon={faHeart} color="red" />
                         {likeCount}
+                      </Badge>
+                    )}
+                    {imageCount > 0 && (
+                      <Badge>
+                        <FontAwesomeIcon icon={faImage} color="green" />
+                        {imageCount}
                       </Badge>
                     )}
                   </Td>

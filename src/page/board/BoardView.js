@@ -1,8 +1,11 @@
 import {
+  Badge,
   Box,
   Button,
+  Checkbox,
   Flex,
   FormControl,
+  FormHelperText,
   FormLabel,
   Heading,
   Image,
@@ -20,7 +23,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useImmer } from "use-immer";
 import { LoginContext } from "../../component/LoginProvider";
@@ -32,10 +35,14 @@ import { faHeart as normalHeart } from "@fortawesome/free-regular-svg-icons";
 export function BoardView() {
   const [board, setBoard] = useState(null);
   const [isChange, setIsChange] = useState(false);
+  const [wantFileUpdate, setWantFileUpdate] = useState(false);
+  const [isAnyFile, setIsAnyFile] = useState(false);
   const [updateData, updateUpdateData] = useImmer({
     title: "",
     content: "",
     writer: "",
+    file: null,
+    isFileDelete: false,
   });
 
   const deleteModal = useDisclosure();
@@ -79,7 +86,7 @@ export function BoardView() {
 
   function handleUpdateButton() {
     axios
-      .put("/api/board/update/" + id, { ...updateData })
+      .putForm("/api/board/update/" + id, { ...updateData })
       .then(
         () =>
           toast({
@@ -172,7 +179,13 @@ export function BoardView() {
       </FormControl>
       {(hasAccess(board.writer) || isAdmin()) && (
         <Box>
-          <Button colorScheme="purple" onClick={updateModal.onOpen}>
+          <Button
+            colorScheme="purple"
+            onClick={() => {
+              updateModal.onOpen();
+              setWantFileUpdate(false);
+            }}
+          >
             수정
           </Button>
           <Button colorScheme="red" onClick={deleteModal.onOpen}>
@@ -201,10 +214,57 @@ export function BoardView() {
         <ModalContent>
           <ModalHeader>수정 확인</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>수정 하시겠습니까?</ModalBody>
+          <ModalBody>
+            수정 하시겠습니까?
+            <Badge color={"purple"}>
+              파일 수정
+              <Checkbox
+                colorScheme="purple"
+                onChange={(e) => {
+                  setWantFileUpdate(!wantFileUpdate);
+                }}
+              />
+            </Badge>
+            {wantFileUpdate || (
+              <Badge color={"red"}>
+                파일 삭제
+                <Checkbox
+                  colorScheme="red"
+                  onChange={(e) =>
+                    updateUpdateData((draft) => {
+                      draft.isFileDelete = !draft.isFileDelete;
+                    })
+                  }
+                />
+              </Badge>
+            )}
+            {wantFileUpdate && (
+              <FormControl>
+                <Input
+                  mt={"8px"}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={(e) => {
+                    updateUpdateData((draft) => {
+                      draft.file = e.target.files;
+                    });
+                    if (e.target.files.length > 0) setIsAnyFile(true);
+                  }}
+                />
+                <FormHelperText color={"red"} textAlign={"center"}>
+                  * 파일 수정 시 기존 파일은 삭제됩니다.
+                </FormHelperText>
+              </FormControl>
+            )}
+          </ModalBody>
           <ModalFooter>
             <Button onClick={updateModal.onClose}>닫기</Button>
-            <Button onClick={handleUpdateButton} colorScheme="purple">
+            <Button
+              isDisabled={wantFileUpdate && !isAnyFile}
+              onClick={handleUpdateButton}
+              colorScheme="purple"
+            >
               수정하기
             </Button>
           </ModalFooter>
