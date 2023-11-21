@@ -19,7 +19,7 @@ export function BoardWrite() {
   const [write, updateWrite] = useImmer({
     title: "",
     content: "",
-    files: null,
+    file: null,
   });
 
   const navigate = useNavigate();
@@ -87,7 +87,7 @@ export function BoardWrite() {
             multiple
             onChange={(e) =>
               updateWrite((draft) => {
-                draft.files = e.target.files;
+                draft.file = e.target.files;
               })
             }
           />
